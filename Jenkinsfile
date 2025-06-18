@@ -22,7 +22,7 @@ pipeline {
         }
         stage ('Image Analysis') {
             steps {
-                sh "grype ${dockerImage}"
+                sh "grype ${dockerImage.imageName()}"
             }
         }
         stage('Push Image') {
