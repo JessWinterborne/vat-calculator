@@ -5,6 +5,7 @@ pipeline {
         registry = "${dockerCreds_USR}/vatcal"
         registryCredentials = "dockerhub_login"
         dockerImage = ""
+    }
     stages {
         stage('Run Tests') {
             steps {
