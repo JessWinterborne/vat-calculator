@@ -20,6 +20,11 @@ pipeline {
                 }
             }
         }
+        stage ('Image Analysis') {
+            steps {
+                sh "grype ${dockerImage}"
+            }
+        }
         stage('Push Image') {
             steps {
                 script {
