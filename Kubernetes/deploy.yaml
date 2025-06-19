@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: vatcalc
-          image: [dockerhub_id]/vatcal:latest
+          image: jesswinterborne/vatcal:latest
           imagePullPolicy: Always
           resources:
             requests:
@@ -26,4 +26,4 @@ spec:
               memory: "16Mi"
               cpu: "100m"
           ports:
-          - containerPort: 80
+            - containerPort: 80
