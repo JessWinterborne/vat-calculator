@@ -1,11 +1,11 @@
 pipeline {
     agent any
     environment {
-        awsCreds = 'aws_credentials'
         dockerCreds = credentials('dockerhub_login')
         registry = "${dockerCreds_USR}/vatcal"
         registryCredentials = "dockerhub_login"
         dockerImage = ""
+        KUBECONFIG = "config.yaml"
     }
     stages {
         stage('Run Tests') {
@@ -36,17 +36,11 @@ pipeline {
                 sh "docker image prune --all --force --filter 'until=48h'"
             }
         }
-        stage('Provision Server') {
+        stage('Deploy Kubernetes') {
             steps {
-                script {
-                    withCredentials([file(credentialsId: awsCreds, variable: 'AWS_CREDENTIALS')]) {
-                        sh 'rm credentials || true'
-                        sh 'ln $AWS_CREDENTIALS credentials'
-                        sh 'echo "creds_file = \"credentials\"" > terraform.tfvars'
-                        sh 'terraform init'
-                        sh 'terraform apply --auto-approve'
-                    }
-                }
+                sh "cp -u /mnt/k3s/config config.yaml"
+                sh "kubectl apply -f kubernetes/deploy.yml"
+                sh "kubectl apply -f kubernetes/service.yml"
             }
         }
     }
